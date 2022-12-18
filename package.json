@@ -20,11 +20,12 @@
   },
   "homepage": "https://github.com/m-a-mohsen/myFlix-client#readme",
   "dependencies": {
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.8.1",
+    "@parcel/transformer-sass": "^2.8.2",
     "@types/react": "^18.0.26",
     "eslint": "^8.29.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -32,6 +33,7 @@
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "parcel": "^2.8.2",
     "process": "^0.11.10"
   }
 }
