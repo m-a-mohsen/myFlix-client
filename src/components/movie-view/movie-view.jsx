@@ -1,9 +1,11 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/function-component-definition */
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const MovieView = ({ movie, onBackClick }) => (
   <div>
@@ -37,3 +39,14 @@ export const MovieView = ({ movie, onBackClick }) => (
     <button onClick={onBackClick}>Back</button>
   </div>
 );
+
+MovieView.propTypes = {
+  movie: PropTypes.shape({
+    Title: PropTypes.string.isRequired,
+    ImagePath: PropTypes.string.isRequired,
+    Description: PropTypes.string.isRequired,
+    Genre: PropTypes.array,
+    Director: PropTypes.array,
+  }).isRequired,
+  onBackClick: PropTypes.func.isRequired,
+};
