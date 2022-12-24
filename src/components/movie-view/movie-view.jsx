@@ -6,6 +6,7 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 
 export const MovieView = ({ movie, onBackClick }) => (
   <div>
@@ -36,7 +37,7 @@ export const MovieView = ({ movie, onBackClick }) => (
       </span>
       <span>{movie.Description}</span>
     </div>
-    <button onClick={onBackClick}>Back</button>
+    <Button onClick={onBackClick}>Back</Button>
   </div>
 );
 

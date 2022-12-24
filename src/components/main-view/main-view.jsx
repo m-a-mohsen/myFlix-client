@@ -5,6 +5,7 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { Button, Row, Col } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
@@ -31,9 +32,12 @@ export const MainView = () => {
           _id: movie._id,
           Title: movie.title,
           Description: movie.fullplot,
+          sDescription: movie.plot,
           Genre: movie.genres,
           Director: movie.directors,
           ImagePath: movie.poster,
+          Year: movie.year,
+          Rating: movie.imdb.rating,
         }));
         setMovies(moviesFromDb);
       });
@@ -42,26 +46,32 @@ export const MainView = () => {
   // User authentication
   if (!user) {
     return (
-      <>
-        <LoginView
-          onLoggedIn={(user, token) => {
-            setUser(user);
-            setToken(token);
-          }}
-        />
-        or
-        <SignupView />
-      </>
+      <Row className="justify-content-md-center">
+        <Col md={5}>
+          <LoginView
+            onLoggedIn={(user, token) => {
+              setUser(user);
+              setToken(token);
+            }}
+          />
+          or
+          <SignupView />
+        </Col>
+      </Row>
     );
   }
-  // select a book to display in expanded movie view
+  // select a Movie to display in expanded movie view
 
   if (selectedMovie) {
     return (
-      <MovieView
-        movie={selectedMovie}
-        onBackClick={() => setSelectedMovie(null)}
-      />
+      <Row className="justify-content-md-center">
+        <Col md={8}>
+          <MovieView
+            movie={selectedMovie}
+            onBackClick={() => setSelectedMovie(null)}
+          />
+        </Col>
+      </Row>
     );
   }
   // check if no movies list
@@ -72,17 +82,22 @@ export const MainView = () => {
 
   // display movie card with all movies
   return (
-    <div>
+    <Row className="my-2">
+      {/* <div style={{ border: '1px solid orange' }}> */}
       {movies.map((movie) => (
-        <MovieCard
-          movie={movie}
-          key={movie._id}
-          onMovieClick={(newSelectedMovie) =>
-            setSelectedMovie(newSelectedMovie)
-          }
-        />
+        <Col key={movie._id} md={3} className="p-2">
+          <MovieCard
+            movie={movie}
+            // key={movie._id}
+            onMovieClick={(newSelectedMovie) =>
+              setSelectedMovie(newSelectedMovie)
+            }
+          />
+        </Col>
       ))}
-      <button
+      <Button
+        variant="primary"
+        className="my-3"
         onClick={() => {
           setUser(null);
           setToken(null);
@@ -90,7 +105,8 @@ export const MainView = () => {
         }}
       >
         Logout
-      </button>
-    </div>
+      </Button>
+      {/* </div> */}
+    </Row>
   );
 };
