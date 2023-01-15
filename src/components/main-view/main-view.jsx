@@ -10,6 +10,15 @@ import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { SignupView } from '../signup-view/signup-view';
+import { NavigationBar } from '../navigation-bar/navigation-bar';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+  Navigate,
+  Outlet,
+} from 'react-router-dom';
 
 export const MainView = () => {
   // ------- Hooks --------
@@ -19,6 +28,7 @@ export const MainView = () => {
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!token) return;
@@ -40,73 +50,80 @@ export const MainView = () => {
           Rating: movie.imdb.rating,
         }));
         setMovies(moviesFromDb);
+        setLoading(false);
       });
   }, [token]);
+  // creating router
 
-  // User authentication
-  if (!user) {
-    return (
-      <Row className="justify-content-md-center">
-        <Col md={5}>
-          <LoginView
-            onLoggedIn={(user, token) => {
-              setUser(user);
-              setToken(token);
-            }}
-          />
-          or
-          <SignupView />
-        </Col>
-      </Row>
-    );
-  }
-  // select a Movie to display in expanded movie view
-
-  if (selectedMovie) {
-    return (
-      <Row className="justify-content-md-center">
-        <Col md={8}>
-          <MovieView
-            movie={selectedMovie}
-            onBackClick={() => setSelectedMovie(null)}
-          />
-        </Col>
-      </Row>
-    );
-  }
-  // check if no movies list
-  if (movies.length === 0) {
-    // return <div>there are no movies !!</div>;
-    return <div>Loading... Please have some patience .</div>;
-  }
-
-  // display movie card with all movies
-  return (
-    <Row className="my-2">
-      {/* <div style={{ border: '1px solid orange' }}> */}
-      {movies.map((movie) => (
-        <Col key={movie._id} md={3} className="p-2">
-          <MovieCard
-            movie={movie}
-            // key={movie._id}
-            onMovieClick={(newSelectedMovie) =>
-              setSelectedMovie(newSelectedMovie)
-            }
-          />
-        </Col>
-      ))}
-      <Button
-        variant="primary"
-        className="my-3"
-        onClick={() => {
-          setUser(null);
-          setToken(null);
-          localStorage.clear();
-        }}
-      >
-        Logout
-      </Button>
-      {/* </div> */}
-    </Row>
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<RootLayout />}>
+        <Route
+          index
+          element={
+            user ? (
+              <Row className="my-2">
+                {movies.map((movie) => (
+                  <Col key={movie._id} md={3} className="p-2">
+                    <MovieCard
+                      movie={movie}
+                      onMovieClick={(newSelectedMovie) =>
+                        setSelectedMovie(newSelectedMovie)
+                      }
+                    />
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <Navigate to="login" replace />
+            )
+          }
+        />
+        <Route
+          path="login"
+          element={
+            !user ? (
+              <Row className="justify-content-md-center">
+                <Col md={5}>
+                  <LoginView
+                    onLoggedIn={(user, token) => {
+                      setUser(user);
+                      setToken(token);
+                    }}
+                  />
+                </Col>
+              </Row>
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route path="signup" element={<SignupView />} />
+      </Route>
+    )
   );
+
+  // Layouts
+  function RootLayout() {
+    return (
+      <>
+        <NavigationBar
+          user={user}
+          onLoggedOut={() => {
+            setUser(null);
+            setToken(null);
+            localStorage.clear();
+          }}
+        />
+        <Outlet />
+        {isLoading && user ? (
+          <p className="text-center">loading....</p>
+        ) : (
+          <p></p>
+        )}
+      </>
+    );
+  }
+  // Return statement
+  return <RouterProvider router={router} />;
 };
