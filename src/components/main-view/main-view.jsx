@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-duplicates */
@@ -6,11 +7,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
-import { MovieCard } from '../movie-card/movie-card';
-import { MovieView } from '../movie-view/movie-view';
-import { LoginView } from '../login-view/login-view';
-import { SignupView } from '../signup-view/signup-view';
-import { NavigationBar } from '../navigation-bar/navigation-bar';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -19,6 +15,11 @@ import {
   Navigate,
   Outlet,
 } from 'react-router-dom';
+import { MovieCard } from '../movie-card/movie-card';
+import { MovieView } from '../movie-view/movie-view';
+import { LoginView } from '../login-view/login-view';
+import { SignupView } from '../signup-view/signup-view';
+import { NavigationBar } from '../navigation-bar/navigation-bar';
 
 export const MainView = () => {
   // ------- Hooks --------
@@ -65,12 +66,7 @@ export const MainView = () => {
               <Row className="my-2">
                 {movies.map((movie) => (
                   <Col key={movie._id} md={3} className="p-2">
-                    <MovieCard
-                      movie={movie}
-                      onMovieClick={(newSelectedMovie) =>
-                        setSelectedMovie(newSelectedMovie)
-                      }
-                    />
+                    <MovieCard movie={movie} />
                   </Col>
                 ))}
               </Row>
@@ -99,6 +95,20 @@ export const MainView = () => {
           }
         />
         <Route path="signup" element={<SignupView />} />
+        <Route
+          path="/movies/:movieId"
+          element={
+            !user ? (
+              <Navigate to="/login" replace />
+            ) : movies.length === 0 ? (
+              <Col>The list is empty!</Col>
+            ) : (
+              <Col md={8}>
+                <MovieView movies={movies} />
+              </Col>
+            )
+          }
+        />
       </Route>
     )
   );
@@ -119,7 +129,7 @@ export const MainView = () => {
         {isLoading && user ? (
           <p className="text-center">loading....</p>
         ) : (
-          <p></p>
+          <p> </p>
         )}
       </>
     );

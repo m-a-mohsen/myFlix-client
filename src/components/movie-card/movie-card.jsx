@@ -1,9 +1,11 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable import/prefer-default-export */
 import PropTypes from 'prop-types';
 import { Button, Card } from 'react-bootstrap';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-export function MovieCard({ movie, onMovieClick }) {
+export function MovieCard({ movie }) {
   return (
     <Card className="h-100">
       <Card.Img variant="top" src={movie.ImagePath} />
@@ -17,13 +19,11 @@ export function MovieCard({ movie, onMovieClick }) {
           IMDB Rating: {movie.Rating}
         </Card.Subtitle>
         <Card.Text>{movie.sDescription}</Card.Text>
-        <Button
-          className="mt-auto"
-          variant="primary"
-          onClick={() => onMovieClick(movie)}
-        >
-          open
-        </Button>
+        <Link to={`/movies/${encodeURIComponent(movie._id)}`}>
+          <Button className="mt-auto" variant="primary">
+            Open
+          </Button>
+        </Link>
       </Card.Body>
     </Card>
   );
