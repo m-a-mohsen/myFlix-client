@@ -1,3 +1,10 @@
+// TODO Display a user's favorite movies as a list
+// TODO Allow a user to update their user information (username, password, email, date of birth)
+// TODO Add a “Favorite” button to your MovieCard and/or MovieView components
+// TODO Allow a user to remove a movie from their list of favorites
+// TODO Allow a user to deregister
+
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-underscore-dangle */
@@ -19,6 +26,7 @@ import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { SignupView } from '../signup-view/signup-view';
+import { ProfileView } from '../profile-view/profile-view';
 import { NavigationBar } from '../navigation-bar/navigation-bar';
 
 export const MainView = () => {
@@ -106,6 +114,16 @@ export const MainView = () => {
               <Col md={8}>
                 <MovieView movies={movies} />
               </Col>
+            )
+          }
+        />
+        <Route
+          path="/user/"
+          element={
+            !user ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <ProfileView user={user} />
             )
           }
         />

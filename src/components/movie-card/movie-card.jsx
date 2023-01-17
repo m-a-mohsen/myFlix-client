@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable import/prefer-default-export */
 import PropTypes from 'prop-types';
@@ -38,7 +40,6 @@ MovieCard.propTypes = {
     Year: PropTypes.number,
     Rating: PropTypes.number,
   }).isRequired,
-  onMovieClick: PropTypes.func.isRequired,
 };
 
 // export default MovieCard;

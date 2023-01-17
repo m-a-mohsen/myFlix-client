@@ -1,7 +1,10 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable import/prefer-default-export */
+import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-export const NavigationBar = ({ user, onLoggedOut }) => {
+export function NavigationBar({ user, onLoggedOut }) {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -26,6 +29,9 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
                 <Nav.Link as={Link} to="/">
                   Home
                 </Nav.Link>
+                <Nav.Link as={Link} to="/user">
+                  Profile
+                </Nav.Link>
                 <Nav.Link onClick={onLoggedOut}>Logout</Nav.Link>
               </>
             )}
@@ -34,4 +40,4 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
       </Container>
     </Navbar>
   );
-};
+}

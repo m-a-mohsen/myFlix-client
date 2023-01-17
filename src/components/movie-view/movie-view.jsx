@@ -7,7 +7,7 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { useParams } from 'react-router';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
