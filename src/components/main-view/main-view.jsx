@@ -1,4 +1,7 @@
-// TODO Display a user's favorite movies as a list
+// done Display a user's favorite movies as a list
+
+// TODO conditional add to favorites button in card view
+
 // TODO Allow a user to update their user information (username, password, email, date of birth)
 // TODO Add a “Favorite” button to your MovieCard and/or MovieView components
 // TODO Allow a user to remove a movie from their list of favorites
@@ -33,12 +36,13 @@ export const MainView = () => {
   // ------- Hooks --------
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const storedToken = localStorage.getItem('token');
-  const [user, setUser] = useState(storedUser ? storedUser : null);
-  const [token, setToken] = useState(storedToken ? storedToken : null);
+  const [user, setUser] = useState(storedUser || null);
+  const [token, setToken] = useState(storedToken || null);
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
+  // fetch all movies
   useEffect(() => {
     if (!token) return;
 
@@ -59,9 +63,118 @@ export const MainView = () => {
           Rating: movie.imdb.rating,
         }));
         setMovies(moviesFromDb);
+        // setFavoriteMovies(user.favoriteMovies);
         setLoading(false);
       });
   }, [token]);
+
+  // Pull favorite movies
+  useEffect(() => {
+    if (!token) return;
+    fetch(`https://moviesapi2.onrender.com/users/${user.Username}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setFavoriteMovies(data.favoriteMovies);
+        setLoading(false);
+      });
+  }, []);
+
+  // Add to favorites movies
+
+  const addToFavorites = (movie) => {
+    fetch(
+      `https://moviesapi2.onrender.com/users/${user.Username}/${movie._id}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    ).then((response) => {
+      if (response.ok) {
+        alert(`${movie.Title} added to favorite movies`);
+        window.location.reload();
+      } else {
+        alert('adding failed');
+      }
+    });
+  };
+
+  // Remove from favorites movies
+  const removeFromFavorites = (movie) => {
+    fetch(
+      `https://moviesapi2.onrender.com/users/${user.Username}/${movie._id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    ).then((response) => {
+      if (response.ok) {
+        alert(`${movie.Title} is removed favorite movies`);
+        window.location.reload();
+      } else {
+        alert('Removing failed');
+      }
+    });
+  };
+
+  // Deregister user
+  // useEffect(() => {
+  //   const deregisterUser = () => {
+  //     fetch(
+  //       `https://moviesapi2.onrender.com/users/${user.Username}`,
+  //       {
+  //         method: 'DELETE',
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     ).then((response) => {
+  //       if (response.ok) {
+  //         alert(`${user.Username} was permanently removed`);
+  //         window.location.reload();
+  //       } else {
+  //         alert('Deregistration failed');
+  //       }
+  //     });
+  //   };
+  // }, []);
+
+  // Update user details
+  // useEffect(() => {
+  //   const deregisterUser = () => {
+  //          const data = {
+  //   Username: username,
+  //   Password: password,
+  //   Email: email,
+  //   Birthday: birthday,
+  // };
+  //     fetch(
+  //       `https://moviesapi2.onrender.com/users/${user.Username}`,
+  //       {
+  //         method: 'PUT',
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     ).then((response) => {
+  //       if (response.ok) {
+  //         alert(`${user.Username} was permanently removed`);
+  //         window.location.reload();
+  //       } else {
+  //         alert('Deregistration  failed');
+  //       }
+  //     });
+  //   };
+  // }, []);
   // creating router
 
   const router = createBrowserRouter(
@@ -74,7 +187,12 @@ export const MainView = () => {
               <Row className="my-2">
                 {movies.map((movie) => (
                   <Col key={movie._id} md={3} className="p-2">
-                    <MovieCard movie={movie} />
+                    <MovieCard
+                      movie={movie}
+                      favoriteMovies={favoriteMovies}
+                      addToFavorites={addToFavorites}
+                      removeFromFavorites={removeFromFavorites}
+                    />
                   </Col>
                 ))}
               </Row>
@@ -123,7 +241,11 @@ export const MainView = () => {
             !user ? (
               <Navigate to="/login" replace />
             ) : (
-              <ProfileView user={user} />
+              <ProfileView
+                user={user}
+                movies={movies}
+                favoriteMovies={favoriteMovies}
+              />
             )
           }
         />

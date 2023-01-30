@@ -4,14 +4,24 @@
 /* eslint-disable import/prefer-default-export */
 import PropTypes from 'prop-types';
 import { Button, Card } from 'react-bootstrap';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export function MovieCard({ movie }) {
+export function MovieCard({
+  movie,
+  favoriteMovies,
+  addToFavorites,
+  removeFromFavorites,
+}) {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  if (favoriteMovies && favoriteMovies.includes(movie._id)) {
+    setIsFavorite(true);
+  }
+
   return (
     <Card className="h-100">
       <Card.Img variant="top" src={movie.ImagePath} />
-      {/* <Card.Img variant="top" src="https://via.placeholder.com/150" /> */}
       <Card.Body className="d-flex flex-column">
         <Card.Title>{movie.Title}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">
@@ -22,10 +32,28 @@ export function MovieCard({ movie }) {
         </Card.Subtitle>
         <Card.Text>{movie.sDescription}</Card.Text>
         <Link to={`/movies/${encodeURIComponent(movie._id)}`}>
-          <Button className="mt-auto" variant="primary">
+          <Button className="mx-1" variant="primary">
             Open
           </Button>
         </Link>
+        {!isFavorite && (
+          <Button
+            onClick={addToFavorites(movie)}
+            className="mx-1"
+            variant="secondary"
+          >
+            Add to Favorites
+          </Button>
+        )}
+        {isFavorite && (
+          <Button
+            onClick={removeFromFavorites(movie)}
+            className="mx-1"
+            variant="warning"
+          >
+            Remove From Favorites
+          </Button>
+        )}
       </Card.Body>
     </Card>
   );
