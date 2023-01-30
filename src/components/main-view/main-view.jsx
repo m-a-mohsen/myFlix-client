@@ -46,7 +46,8 @@ export const MainView = () => {
   useEffect(() => {
     if (!token) return;
 
-    fetch('https://moviesapi2.onrender.com/movies', {
+    fetch('https://cfmovieapp2.azurewebsites.net/movies', {
+    // fetch('https://moviesapi2.onrender.com/movies', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())
