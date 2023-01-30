@@ -18,6 +18,8 @@ export function MovieCard({
   if (favoriteMovies && favoriteMovies.includes(movie._id)) {
     setIsFavorite(true);
   }
+  const handelAddToFavorites = () => addToFavorites(movie);
+  const handelRemoveFromFavorites = () => removeFromFavorites(movie);
 
   return (
     <Card className="h-100">
@@ -38,7 +40,7 @@ export function MovieCard({
         </Link>
         {!isFavorite && (
           <Button
-            onClick={addToFavorites(movie)}
+            onClick={handelAddToFavorites}
             className="mx-1"
             variant="secondary"
           >
@@ -47,7 +49,7 @@ export function MovieCard({
         )}
         {isFavorite && (
           <Button
-            onClick={removeFromFavorites(movie)}
+            onClick={handelRemoveFromFavorites}
             className="mx-1"
             variant="warning"
           >
