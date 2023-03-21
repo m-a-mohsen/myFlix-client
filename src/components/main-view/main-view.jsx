@@ -2,9 +2,10 @@
 
 // TODO conditional add to favorites button in card view
 
-// TODO Allow a user to update their user information (username, password, email, date of birth)
-// TODO Add a “Favorite” button to your MovieCard and/or MovieView components
 // TODO Allow a user to remove a movie from their list of favorites
+// TODO Add a “Favorite” button to your MovieCard and/or MovieView components
+
+// TODO Allow a user to update their user information (username, password, email, date of birth)
 // TODO Allow a user to deregister
 
 /* eslint-disable react/no-unstable-nested-components */
@@ -14,6 +15,7 @@
 /* eslint-disable import/no-duplicates */
 /* eslint-disable react/function-component-definition */
 /* eslint-disable import/prefer-default-export */
+
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
@@ -33,9 +35,13 @@ import { ProfileView } from '../profile-view/profile-view';
 import { NavigationBar } from '../navigation-bar/navigation-bar';
 
 export const MainView = () => {
-  // ------- Hooks --------
+  // ------- Variables --------
   const storedUser = JSON.parse(localStorage.getItem('user'));
+  // const storedFavorites = storedUser.FavoriteMovies;
   const storedToken = localStorage.getItem('token');
+  // console.log(storedUser);
+  // console.log(storedFavorites);
+  // ------- Hooks --------
   const [user, setUser] = useState(storedUser || null);
   const [token, setToken] = useState(storedToken || null);
   const [movies, setMovies] = useState([]);
@@ -76,13 +82,24 @@ export const MainView = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setFavoriteMovies(data.favoriteMovies);
-        setLoading(false);
+        const favs = data.FavoriteMovies;
+        // console.log({ favs });
+        // console.log({ favoriteMovies });
+
+        setFavoriteMovies(favs);
+        // setLoading(false);
+        // console.log({ favoriteMovies });
       });
   }, []);
 
+  // console.log({ favoriteMovies });
+  //
+  // filter movies array for profile page
+  function isFav(movieItem) {
+    return favoriteMovies.includes(movieItem._id);
+  }
+  const favMovies = movies.filter((movie) => isFav(movie));
   // Add to favorites movies
-
   const addToFavorites = (movie) => {
     fetch(
       `https://moviesapi2.onrender.com/users/${user.Username}/${movie._id}`,
@@ -95,6 +112,7 @@ export const MainView = () => {
       }
     ).then((response) => {
       if (response.ok) {
+        setFavoriteMovies([...favoriteMovies, movie._id]);
         alert(`${movie.Title} added to favorite movies`);
         window.location.reload();
       } else {
@@ -175,7 +193,6 @@ export const MainView = () => {
   //     });
   //   };
   // }, []);
-  // creating router
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -186,8 +203,9 @@ export const MainView = () => {
             user ? (
               <Row className="my-2">
                 {movies.map((movie) => (
-                  <Col key={movie._id} md={3} className="p-2">
+                  <Col md={3} className="p-2">
                     <MovieCard
+                      key={movie._id}
                       movie={movie}
                       favoriteMovies={favoriteMovies}
                       addToFavorites={addToFavorites}
@@ -241,11 +259,22 @@ export const MainView = () => {
             !user ? (
               <Navigate to="/login" replace />
             ) : (
-              <ProfileView
-                user={user}
-                movies={movies}
-                favoriteMovies={favoriteMovies}
-              />
+              <>
+                <ProfileView user={user} />
+                <Row className="my-2">
+                  {favMovies.map((movie) => (
+                    <Col md={2} className="p-2">
+                      <MovieCard
+                        key={movie._id}
+                        movie={movie}
+                        favoriteMovies={favoriteMovies}
+                        addToFavorites={addToFavorites}
+                        removeFromFavorites={removeFromFavorites}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              </>
             )
           }
         />
@@ -266,6 +295,7 @@ export const MainView = () => {
           }}
         />
         <Outlet />
+
         {isLoading && user ? (
           <p className="text-center">loading....</p>
         ) : (

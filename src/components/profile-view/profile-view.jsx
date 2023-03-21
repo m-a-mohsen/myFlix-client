@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/button-has-type */
@@ -5,16 +6,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
-import { useParams } from 'react-router';
-// import PropTypes from 'prop-types';
-import { Button, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { MovieCard } from '../movie-card/movie-card';
 
-export function ProfileView({ user, movies, favoriteMovie }) {
-  const favMovies = movies.filter((movie) =>
-    user.FavoriteMovies.includes(movie._id)
-  );
+export function ProfileView({ user }) {
   return (
     <div>
       <h3>User Details</h3>
@@ -38,13 +31,6 @@ export function ProfileView({ user, movies, favoriteMovie }) {
       </div>
       <div>
         <h3>Favorite Movies:</h3>
-        <Row className="my-2">
-          {favMovies.map((movie) => (
-            <Col key={movie._id} md={2} className="p-2">
-              <MovieCard movie={movie} />
-            </Col>
-          ))}
-        </Row>
       </div>
     </div>
   );
