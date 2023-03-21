@@ -3,8 +3,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable import/prefer-default-export */
 
-// XXX reduce
-
 import PropTypes from 'prop-types';
 import { Button, Card } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
@@ -17,15 +15,10 @@ export function MovieCard({
   removeFromFavorites,
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
-  console.log({ isFavorite });
-  // console.log({ favoriteMovies });
-  // console.log(Array.isArray(favoriteMovies));
   if (favoriteMovies && favoriteMovies.includes(movie._id)) {
     useEffect(() => {
       setIsFavorite(true);
     }, []);
-
-    console.log({ isFavorite });
   }
   const handelAddToFavorites = () => addToFavorites(movie);
   const handelRemoveFromFavorites = () => removeFromFavorites(movie);

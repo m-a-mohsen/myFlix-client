@@ -1,9 +1,11 @@
+/* eslint-disable no-alert */
+/* eslint-disable comma-dangle */
 // done Display a user's favorite movies as a list
 
-// TODO conditional add to favorites button in card view
+// [ ] conditional add to favorites button in card view
 
-// TODO Allow a user to remove a movie from their list of favorites
-// TODO Add a “Favorite” button to your MovieCard and/or MovieView components
+// [ ] Allow a user to remove a movie from their list of favorites
+// [ ] Add a “Favorite” button to your MovieCard and/or MovieView components
 
 // TODO Allow a user to update their user information (username, password, email, date of birth)
 // TODO Allow a user to deregister
@@ -18,7 +20,7 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Button, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import {
   createBrowserRouter,
   createRoutesFromElements,

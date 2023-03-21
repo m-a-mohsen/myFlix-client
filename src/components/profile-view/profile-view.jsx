@@ -8,6 +8,8 @@
 import React from 'react';
 
 export function ProfileView({ user }) {
+  const birthday = new Date(user.Birthday);
+  console.log(typeof birthday);
   return (
     <div>
       <h3>User Details</h3>
@@ -27,7 +29,16 @@ export function ProfileView({ user }) {
         <span>
           <strong>Birthday: </strong>
         </span>
-        <span>{user.Birthday}</span>
+        <span>
+          {birthday.toLocaleDateString('de-DE', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </span>
+        <br />
+        <br />
+        <br />
       </div>
       <div>
         <h3>Favorite Movies:</h3>
