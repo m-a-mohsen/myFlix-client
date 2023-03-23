@@ -20,7 +20,7 @@ export const SignupView = () => {
       Email: email,
       Birthday: birthday,
     };
-
+    // updated
     fetch('https://moviesapi2.onrender.com/users', {
       method: 'POST',
       body: JSON.stringify(data),
