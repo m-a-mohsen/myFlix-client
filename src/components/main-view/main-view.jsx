@@ -10,6 +10,11 @@
 // TODO Allow a user to update their user information (username, password, email, date of birth)
 // TODO Allow a user to deregister
 
+// HACK search functionality
+// HACK similar movies functionality
+// HACK refactor promises into async await
+// HACK use material framework
+
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/button-has-type */
