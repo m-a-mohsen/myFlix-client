@@ -20,6 +20,7 @@ export function MovieCard({
       setIsFavorite(true);
     }, []);
   }
+  // Updated
   const handelAddToFavorites = () => addToFavorites(movie);
   const handelRemoveFromFavorites = () => removeFromFavorites(movie);
 
