@@ -33,12 +33,14 @@ import {
   RouterProvider,
   Navigate,
   Outlet,
+  useNavigate,
 } from 'react-router-dom';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { SignupView } from '../signup-view/signup-view';
 import { ProfileView } from '../profile-view/profile-view';
+import { UpdateUser } from '../update-user/update-user';
 import { NavigationBar } from '../navigation-bar/navigation-bar';
 
 export const MainView = () => {
@@ -55,12 +57,16 @@ export const MainView = () => {
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
+  const updateUser = (user) => {
+    setUser(user);
+    localStorage.setItem('user', JSON.stringify(user));
+  };
   // fetch all movies
   useEffect(() => {
     if (!token) return;
 
     fetch('https://moviesapi2.onrender.com/movies', {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, mode: 'no-cors' },
     })
       .then((response) => response.json())
       .then((data) => {
@@ -85,19 +91,22 @@ export const MainView = () => {
   useEffect(() => {
     if (!token) return;
     fetch(`https://moviesapi2.onrender.com/users/${user.Username}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, mode: 'no-cors' },
     })
       .then((response) => response.json())
       .then((data) => {
-        const favs = data.FavoriteMovies;
-        // console.log({ favs });
-        // console.log({ favoriteMovies });
+        if (data) {
+          const favs = data.FavoriteMovies;
+          // console.log({ data });
+          // console.log({ favs });
+          // console.log({ favoriteMovies });
 
-        setFavoriteMovies(favs);
-        // setLoading(false);
-        // console.log({ favoriteMovies });
+          setFavoriteMovies(() => [...favs]);
+        } else {
+          alert('error');
+        }
       });
-  }, []);
+  }, [token]);
 
   // console.log({ favoriteMovies });
   //
@@ -115,6 +124,7 @@ export const MainView = () => {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
+          mode: 'no-cors',
         },
       }
     ).then((response) => {
@@ -137,6 +147,7 @@ export const MainView = () => {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
+          mode: 'no-cors',
         },
       }
     ).then((response) => {
@@ -282,6 +293,25 @@ export const MainView = () => {
                   ))}
                 </Row>
               </>
+            )
+          }
+        />
+        <Route
+          path="/updateUser/"
+          element={
+            !user ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <UpdateUser
+                user={user}
+                token={token}
+                updateUser={updateUser}
+                onLoggedOut={() => {
+                  setUser(null);
+                  setToken(null);
+                  localStorage.clear();
+                }}
+              />
             )
           }
         />

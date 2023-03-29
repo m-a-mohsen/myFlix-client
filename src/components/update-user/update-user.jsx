@@ -4,11 +4,13 @@
 import { React, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-export default function UserUpdate() {
-  const [username, setUsername] = useState('');
+export function UpdateUser({ user, token, UpdateUser, onLoggedOut }) {
+  const [username, setUsername] = useState(user.Username);
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(user.Email);
   const [birthday, setBirthday] = useState('');
 
   const handleSubmit = (event) => {
@@ -21,20 +23,53 @@ export default function UserUpdate() {
       Birthday: birthday,
     };
 
-    fetch('https://moviesapi2.onrender.com/users', {
-      method: 'POST',
+    fetch(`https://moviesapi2.onrender.com/users/${user.Username}`, {
+      method: 'PUT',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        mode: 'no-cors',
       },
-    }).then((response) => {
-      if (response.ok) {
-        alert('Signup successful');
-        window.location.reload();
-      } else {
-        alert('Signup failed');
-      }
-    });
+    })
+      .then((response) => response.json())
+      .then((updatedUserRes) => {
+        if (updatedUserRes) {
+          console.log(updatedUserRes);
+          console.log(typeof updatedUserRes);
+          localStorage.setItem('user', JSON.stringify(updatedUserRes));
+          alert(`Update successful${updatedUserRes}`);
+          window.location.reload();
+          UpdateUser();
+        } else {
+          alert('Update failed');
+        }
+      });
+  };
+
+  const handleDeleteUser = () => {
+    if (window.confirm('Do you really want to delete your account?')) {
+      fetch(`https://moviesapi2.onrender.com/users/${user.Username}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          mode: 'no-cors',
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert(`${user.Username} has gone fishing !`);
+            window.location.reload();
+            onLoggedOut();
+          } else {
+            alert(`Couldn't delete ${user.Username}, Try again`);
+          }
+        })
+        .catch((e) => {
+          alert(e);
+        });
+    }
   };
 
   return (
@@ -80,9 +115,16 @@ export default function UserUpdate() {
           required
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
+      <br />
+      <br />
+      <>
+        <Button variant="primary" type="submit">
+          Update
+        </Button>
+        <Button variant="outline-danger" onClick={handleDeleteUser}>
+          Delete user
+        </Button>
+      </>
     </Form>
   );
 }
