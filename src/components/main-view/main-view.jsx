@@ -1,20 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-alert */
 /* eslint-disable comma-dangle */
-// done Display a user's favorite movies as a list
-
-// [ ] conditional add to favorites button in card view
-
-// [ ] Allow a user to remove a movie from their list of favorites
-// [ ] Add a “Favorite” button to your MovieCard and/or MovieView components
-
-// TODO Allow a user to update their user information (username, password, email, date of birth)
-// TODO Allow a user to deregister
-
-// HACK search functionality
-// HACK similar movies functionality
-// HACK refactor promises into async await
-// HACK use material framework
-
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/button-has-type */
@@ -35,6 +21,8 @@ import {
   Outlet,
   useNavigate,
 } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setMovies } from '../../redux/reducers/movies';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
@@ -44,6 +32,9 @@ import { UpdateUser } from '../update-user/update-user';
 import { NavigationBar } from '../navigation-bar/navigation-bar';
 
 export const MainView = () => {
+  // ------- Redux --------
+  const movies = useSelector((state) => state.movies);
+  const dispatch = useDispatch();
   // ------- Variables --------
   const storedUser = JSON.parse(localStorage.getItem('user'));
   // const storedFavorites = storedUser.FavoriteMovies;
@@ -53,7 +44,7 @@ export const MainView = () => {
   // ------- Hooks --------
   const [user, setUser] = useState(storedUser || null);
   const [token, setToken] = useState(storedToken || null);
-  const [movies, setMovies] = useState([]);
+  // const [movies, setMovies] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -81,7 +72,8 @@ export const MainView = () => {
           Year: movie.year,
           Rating: movie.imdb.rating,
         }));
-        setMovies(moviesFromDb);
+        // setMovies(moviesFromDb);
+        dispatch(setMovies(moviesFromDb));
         // setFavoriteMovies(user.favoriteMovies);
         setLoading(false);
       });
