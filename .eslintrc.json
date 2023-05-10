@@ -7,15 +7,23 @@
         "plugin:react/recommended",
         "airbnb"
     ],
-    "overrides": [
-    ],
+    "overrides": [],
     "parserOptions": {
-        "ecmaVersion": "latest",
+        "ecmaVersion": 6,
         "sourceType": "module"
     },
     "plugins": [
         "react"
     ],
     "rules": {
+        "react/jsx-indent": [
+            "off"
+        ],
+        "react/jsx-indent-props": [
+            "off"
+        ],
+        "react/no-array-index-key": [
+            "off"
+        ]
     }
 }
