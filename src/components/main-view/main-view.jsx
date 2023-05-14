@@ -23,6 +23,7 @@ import {
 } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setMovies } from '../../redux/reducers/movies';
+import { useGetMoviesQuery } from '../../redux/api-slice';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
@@ -32,9 +33,11 @@ import { UpdateUser } from '../update-user/update-user';
 import { NavigationBar } from '../navigation-bar/navigation-bar';
 
 export const MainView = () => {
-  // ------- Redux --------
+  // ------- Redux store--------
   const movies = useSelector((state) => state.movies);
   const dispatch = useDispatch();
+  // ------- Redux API--------
+  const { data: moviesRedux, isLoading } = useGetMoviesQuery();
   // ------- Variables --------
   const storedUser = JSON.parse(localStorage.getItem('user'));
   // const storedFavorites = storedUser.FavoriteMovies;
@@ -46,7 +49,7 @@ export const MainView = () => {
   const [token, setToken] = useState(storedToken || null);
   // const [movies, setMovies] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
 
   const updateUser = (user) => {
     setUser(user);
