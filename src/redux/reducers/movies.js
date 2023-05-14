@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 /* eslint-disable import/no-extraneous-dependencies */
 import { createSlice } from '@reduxjs/toolkit';
 
