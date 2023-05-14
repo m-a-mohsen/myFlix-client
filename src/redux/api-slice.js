@@ -7,7 +7,7 @@ const token = localStorage.getItem('token');
 export const moviesApi = createApi({
     reducerPath: 'moviesApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://moviesapi2.onrender.com/',
+        baseUrl: 'https://moviesapi2.onrender.com',
         prepareHeaders(headers) {
             headers.set('Authorization', `Bearer ${token}`);
             return headers || null;
@@ -15,7 +15,9 @@ export const moviesApi = createApi({
     }),
     endpoints: (builder) => ({
         getMovies: builder.query({
-            query: () => 'movies/',
+            query: () => '/movies',
         }),
     }),
 });
+
+export const { useGetMoviesQuery } = moviesApi;
